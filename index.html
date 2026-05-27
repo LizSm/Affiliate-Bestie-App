@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Affiliate Bestie — Your AI Income Coach</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;min-height:100vh;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;transition:background 0.2s,color 0.2s;}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+@keyframes slideQ{from{opacity:0;transform:translateX(-6px);}to{opacity:1;transform:translateX(0);}}
+textarea,input,select,button{font-family:inherit;}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-thumb{border-radius:4px;}
+
+body.dark{--bg:#0a0a10;--surface:#111118;--card:#17171f;--border:#28283a;--text:#ededf5;--sub:#8080a0;--muted:#50506a;--input:#17171f;--input-border:#28283a;--tab-bg:#111118;--tab-active:#1d1d28;--tab-t:#50506a;--tab-ta:#ededf5;--ghost:#17171f;--ghostt:#8080a0;--scroll:#28283a;--pre:#d0d0e8;}
+body.light{--bg:#f5f5f8;--surface:#ffffff;--card:#eeeeF2;--border:#dddde8;--text:#111118;--sub:#44445a;--muted:#888898;--input:#ffffff;--input-border:#c8c8d8;--tab-bg:#e8e8ee;--tab-active:#ffffff;--tab-t:#888898;--tab-ta:#111118;--ghost:#e8e8ee;--ghostt:#44445a;--scroll:#c8c8d8;--pre:#111118;}
+body.contrast{--bg:#000;--surface:#0c0c0c;--card:#141414;--border:#3a3a3a;--text:#ffffff;--sub:#cccccc;--muted:#888888;--input:#141414;--input-border:#555;--tab-bg:#0c0c0c;--tab-active:#1e1e1e;--tab-t:#888;--tab-ta:#fff;--ghost:#1e1e1e;--ghostt:#ccc;--scroll:#3a3a3a;--pre:#ffffff;}
+
+body{background:var(--bg);color:var(--text);}
+::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--scroll);}
+
+.wrap{max-width:640px;margin:0 auto;padding:0 20px 100px;}
+
+.surface{background:var(--surface);border:1px solid var(--border);border-radius:20px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;}
+.card-sm{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;}
+
+.tab-nav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;background:var(--tab-bg);border:1px solid var(--border);border-radius:16px;padding:4px;margin-bottom:10px;}
+.tab-nav::-webkit-scrollbar{display:none;}
+.tab-btn{flex-shrink:0;padding:9px 12px;border-radius:11px;border:none;background:transparent;color:var(--tab-t);font-size:13px;font-weight:600;white-space:nowrap;cursor:pointer;transition:all 0.18s;letter-spacing:-0.01em;}
+.tab-btn.active{background:var(--tab-active);color:var(--tab-ta);font-weight:700;box-shadow:0 1px 5px rgba(0,0,0,0.1);}
+.tab-btn.done{color:#22c55e;}
+
+input,textarea,select{display:block;width:100%;background:var(--input);color:var(--text);border:1px solid var(--input-border);border-radius:10px;padding:13px 16px;font-size:16px;line-height:1.5;outline:none;transition:border-color 0.15s,box-shadow 0.15s;-webkit-appearance:none;}
+input:focus,textarea:focus{border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,0.12);}
+input::placeholder,textarea::placeholder{color:var(--muted);}
+textarea{resize:vertical;}
+select option{background:var(--card);color:var(--text);}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:12px;padding:14px 24px;font-size:16px;font-weight:600;letter-spacing:-0.01em;cursor:pointer;transition:opacity 0.15s,transform 0.1s;-webkit-tap-highlight-color:transparent;}
+.btn:hover{opacity:0.87;transform:translateY(-1px);}
+.btn:active{transform:translateY(0);}
+.btn:disabled{opacity:0.35;cursor:not-allowed;transform:none;}
+.btn-full{width:100%;}
+.btn-indigo{background:#6366f1;color:#fff;}
+.btn-orange{background:#f97316;color:#fff;}
+.btn-purple{background:#8b5cf6;color:#fff;}
+.btn-green{background:#22c55e;color:#fff;}
+.btn-cyan{background:#06b6d4;color:#fff;}
+.btn-ghost{background:var(--ghost);color:var(--ghostt);border:1px solid var(--border);}
+
+.spin{width:18px;height:18px;border:2.5px solid rgba(255,255,255,0.25);border-top-color:rgba(255,255,255,0.9);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0;}
+.spin-dark{border-color:var(--border);border-top-color:var(--sub);}
+
+.result-wrap{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;margin-top:20px;position:relative;}
+.result-wrap pre{color:var(--pre);font-size:15px;line-height:1.85;white-space:pre-wrap;font-family:inherit;padding-right:60px;}
+.copy-btn{position:absolute;top:14px;right:14px;background:var(--ghost);border:1px solid var(--border);color:var(--ghostt);padding:5px 13px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;}
+.copy-btn:hover{background:#22c55e;color:#fff;border-color:#22c55e;}
+
+.step-banner{border-radius:16px;padding:22px;margin-bottom:28px;}
+.step-title{font-size:17px;font-weight:700;margin-bottom:8px;letter-spacing:-0.02em;}
+.step-body{font-size:15px;line-height:1.7;color:var(--sub);margin-bottom:6px;}
+.step-meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:6px;}
+.step-meta span{font-size:13px;color:var(--muted);}
+.step-tip{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:10px;padding:12px 14px;font-size:14px;color:#d97706;line-height:1.65;margin-top:12px;}
+body.light .step-tip{background:rgba(245,158,11,0.06);}
+body.dark .step-tip{color:#fbbf24;}
+
+.t-sub{color:var(--sub);}
+.t-muted{color:var(--muted);}
+.label{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:block;}
+
+.pill{display:inline-flex;align-items:center;font-size:13px;padding:4px 12px;border-radius:20px;font-weight:600;margin:3px;}
+
+.prog{display:flex;gap:4px;}
+.prog-bar{flex:1;height:4px;border-radius:2px;transition:background 0.3s;}
+
+.bubble-me{background:#4f46e5;color:#fff;border-radius:18px 18px 4px 18px;padding:12px 16px;font-size:15px;line-height:1.7;align-self:flex-end;max-width:82%;}
+.bubble-ai{background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:18px 18px 18px 4px;padding:12px 16px;font-size:15px;line-height:1.7;align-self:flex-start;max-width:82%;}
+
+.login-wrap{min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:32px 20px 60px;}
+.login-box{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:36px 28px;max-width:420px;width:100%;animation:fadeUp 0.3s ease;}
+.auth-tabs{display:flex;background:var(--card);border-radius:12px;padding:4px;margin-bottom:24px;gap:2px;}
+.auth-tab-btn{flex:1;padding:10px 6px;border-radius:9px;border:none;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.18s;background:transparent;color:var(--muted);letter-spacing:-0.01em;}
+.auth-tab-btn.active{background:var(--surface);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,0.1);}
+
+.theme-btn{border:1px solid var(--border);background:var(--card);color:var(--sub);border-radius:9px;padding:7px 11px;font-size:13px;font-weight:600;transition:all 0.15s;cursor:pointer;}
+.theme-btn.active{border-color:#6366f1;color:#6366f1;background:rgba(99,102,241,0.08);}
+
+.divider{display:flex;align-items:center;gap:12px;margin:22px 0;}
+.divider-line{flex:1;height:1px;background:var(--border);}
+.divider-lbl{font-size:11px;font-weight:700;letter-spacing:0.07em;color:var(--muted);text-transform:uppercase;white-space:nowrap;}
+
+.mentor-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 18px;display:flex;gap:14px;align-items:center;cursor:pointer;transition:all 0.18s;width:100%;text-align:left;}
+.mentor-card:hover{border-color:rgba(99,102,241,0.4);transform:translateY(-1px);}
+.mentor-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+
+@media(max-width:480px){
+  .wrap{padding:0 14px 100px;}
+  .login-box{padding:26px 18px;}
+  .tab-btn{padding:8px 10px;font-size:12px;}
+  .surface{padding:20px 18px;}
+  .btn{padding:13px 20px;}
+  .card{padding:16px;}
+  .step-banner{padding:18px;}
+}
+</style>
+
+</head>
+<body class="dark">
+<div id="root"></div>
+<script>
+const PRODUCTS={saf:{id:"saf",name:"Super Affiliate Funnel",emoji:"🚀",tagline:"One link. Up to 8 income streams. Free to join May 2026.",description:"A done-for-you marketing system where you clone a proven sales funnel and earn from up to 8 affiliate programs — all by promoting ONE link. Landing pages, 14-day email follow-up campaign, done-for-you bonuses, and full member onboarding are all handled automatically. Earn daily commissions up to $900, monthly recurring income from two membership programs, traffic commissions, and roll-up commissions unlimited levels deep. Lifetime account, no monthly fees. Free to join in May 2026 ($2,000 value at 100% off).",niche:"Online Business / Affiliate Marketing",price:"FREE in May 2026 (normally $2,000 lifetime — zero monthly fees)",audience:"Complete beginners who want to earn online without building funnels, writing emails, or figuring out tech",winningEdge:"146,000+ members have already joined — the social proof sells itself. Most promoters just paste a link and get nothing. YOU lead with your personal story first. The funnel closes in the background.",howItWorks:["Clone the done-for-you funnel and plug in your affiliate links to 8 programs","Share your ONE unique link on social media, email, or content","Visitors enter the funnel — system captures their email automatically","14-day follow-up email campaign fires on your behalf with your links inside","New members get onboarded through YOUR affiliate links across all 8 programs","You earn: up to $900 daily + monthly recurring + unlimited roll-up commissions"],incomeStreams:["Daily direct commissions up to $900 paid instantly to you","Two monthly recurring membership programs","Traffic and tools commissions","Roll-up commissions unlimited levels deep","Done-for-you bonuses drive extra conversions automatically"],strengths:["Free to join May 2026","8 income streams from 1 link","14-day email follow-up included","No tech skills needed","146K+ member community","Lifetime — no monthly fees"],honest:"Your only job is driving traffic. The funnel converts but it needs eyeballs. Learning traffic generation on TikTok, Facebook, and email is the real skill this business requires.",color:"#f97316"},livegood:{id:"livegood",name:"LiveGood",emoji:"💚",tagline:"Premium health products at cost + affiliate income with matrix spillover",description:"LiveGood is an affiliate marketing business with a matrix spillover model — not traditional network marketing. You promote premium health, wellness, and beauty products at factory-direct prices with no middleman markup. Members pay $9.95 per month to access the full product range at cost price. You earn affiliate commissions on product sales and memberships, plus benefit from matrix spillover commissions as the network grows above and below your position. No quotas, no inventory, no minimum orders.",niche:"Health and Wellness / Affiliate Marketing",price:"$9.95 per month membership to access factory-direct pricing",audience:"Health-conscious people who want to save money on premium supplements AND earn affiliate commissions sharing products they personally use",winningEdge:"Lead with your real personal health results. Your before and after story sells itself. The low $9.95 entry removes the biggest sales objection immediately.",howItWorks:["Join as a member for $9.95 per month to access products at factory-direct prices","Use the products yourself — your real results become your best content","Share your unique affiliate link and personal story on social media","Earn commissions when people join or buy through your link","Benefit from matrix spillover as the network fills positions around you","Build recurring affiliate income as your customer base grows"],incomeStreams:["Retail affiliate commissions on product sales","Monthly membership referral commissions","Matrix spillover commissions as positions fill","Fast Start bonuses for new referrals","Matching bonuses as your referral network grows"],strengths:["$9.95 per month — lowest objection in the niche","Affiliate model — no quotas or minimums","Matrix spillover earns passive-style commissions","Factory-direct pricing is an easy sell","Products you can personally vouch for","Recurring monthly affiliate income"],honest:"This is affiliate marketing — your income grows with consistent content and referrals. Matrix spillover helps but is not passive from day one. Your personal health transformation story is your most powerful marketing tool.",color:"#22c55e"}};
+
+const MENTORS={mariaWendt:{id:"mariaWendt",name:"Maria Wendt",handle:"@maria.wendt",emoji:"💜",color:"#a855f7",vibe:"Warm, zero-gatekeeping, batch-creates 30-40 reels at once. Step-by-step simplicity. Like honest advice from a trusted friend.",platforms:["Instagram Reels","Instagram Carousel","Instagram Stories"],hooks:["She makes seven figures from digital products — here is what most people missed","I post 2-3 times a day on Instagram but I work smarter not harder","Growing on Instagram and monetising it are two very different things","My student got to $100k months in 4 months. Here is exactly what she did","Niche plus Content plus Monetisation equals machine. Comment to get the structure"],framework:"BOLD HOOK in first 2 seconds — pattern interrupt or income proof. SOCIAL PROOF — real results with real specifics. SIMPLE SYSTEM — 3 to 5 bite-sized steps, nothing complex. AUTHENTICITY MOMENT — no gatekeeping, real talk. COMMENT CTA — always asks audience to comment a word to trigger DM automation.",videoFormats:["Face to Camera: Conversational, eye contact, portrait mode. Bold hook spoken before text appears. Good lighting, lifestyle background.","B-Roll plus Text Overlay: Film lifestyle clips — coffee, laptop, walking. Bold text captions tell the whole story. Film in 0.5x wide mode for cinematic look.","Faceless Reel: Screen recordings or hands typing. Text overlay carries the message. Add trending audio. Blue background plus 0.5x zoom for pro look.","Educational Carousel: Slide 1 equals bold hook on coloured background. Slides 2 to 7 equals one insight per slide. Last slide equals Comment WORD for more."]},francescaFields:{id:"francescaFields",name:"Francesca Fields",handle:"@makemoneywithfran",emoji:"🔥",color:"#ec4899",vibe:"Raw, real, no fluff. Former social worker turned multimillionaire. Relatable working mum energy. Leads with her messy, real story.",platforms:["Instagram Reels","Instagram Stories","TikTok"],hooks:["I went from broke burned out and overworked to earning five figures a day from my phone","I started with no audience and no special skills — here is exactly what I did","If you try to talk to everybody you will talk to nobody","I am just a stay-at-home mum who figured this out — here is what I did","How this actually works in plain English with no hype"],framework:"RELATABLE PAIN HOOK — opens with a real struggle the audience feels deeply. PERSONAL STORY — journey from broke and overwhelmed to freedom. THE SHIFT — discovered a simpler path. THE SYSTEM — plug into proven offers instead of reinventing the wheel. PERMISSION CTA — gives audience permission to believe it is possible for them too.",videoFormats:["Raw Story Face to Camera: Handheld, natural setting — kitchen, car, walking. No ring light needed. Authenticity is the point. Speak to one specific person who needs this.","Before and After Split: Old life versus new life. Photo slideshow with voiceover or talking head describing both sides. Text overlay saying BEFORE and NOW.","Conversation Story: Ask a question with a poll. Reply to every person who engages. Move people from audience to DM to buyer.","Text-Only TikTok: Black background, white text, trending audio. No face needed. Type your story one line at a time. Very shareable."]},joshElder:{id:"joshElder",name:"Josh Elder",handle:"@joshcelder",emoji:"⚡",color:"#f59e0b",vibe:"Spiritual and mindset angle alongside business strategy. Gameplan-style numbered teaching. YouTube and Facebook primary. Comment GAMEPLAN CTA.",platforms:["YouTube","TikTok","Facebook"],hooks:["ANYONE can start doing this today with no startup costs and no experience needed","Here is the gameplan — every student of mine who succeeds does this one thing","You are 4 weeks away from freedom if you follow this exactly","Do this daily and you have a location freedom business","I cannot believe how well this works for complete beginners"],framework:"BOLD CLAIM HOOK — result or possibility that stops the scroll. CREDIBILITY BRIDGE — his story or a real student win. THE GAMEPLAN — numbered step-by-step breakdown of exactly what to do. MINDSET LAYER — connects tactics to purpose, not just money. COMMUNITY CTA — comment GAMEPLAN or join the community.",videoFormats:["Talking Head plus Screen Share: Face to camera for intro to build trust, then screen recording for tutorial, then return to face for CTA. Title formula: How I got result in timeframe step by step.","Gameplan Style: Whiteboard or numbered on-screen graphics. Very structured. Feels like a masterclass. Builds authority fast.","Single Insight TikTok: Face to camera, portrait mode, fast delivery. One bold claim per video. Text caption reinforces hook. End with comment GAMEPLAN.","Facebook Live Training: Go live for 15 to 30 minutes. Announce in advance. Take questions live. Mix mindset and tactics. Replay becomes evergreen content."]},joshSmith:{id:"joshSmith",name:"Josh Smith",handle:"@dadtreprenewerofficial",emoji:"👑",color:"#06b6d4",vibe:"Busy dad and parent angle first, business second. 300 million TikTok views. Do the thing philosophy. Faith, family, and financial freedom.",platforms:["TikTok","Instagram Reels","YouTube Shorts"],hooks:["If I only had 15 minutes a day here is exactly what I would do to build income online","I went from $11 an hour to 7 figures and I almost quit 3 times","Technology matters WAY less than you think — here is proof","Stop overcomplicating it. A simple opt-in page beats a perfect website nobody sees","Do the thing. Imperfect action beats perfect planning every single time"],framework:"BUSY PERSON HOOK — speaks directly to parents who feel they have no time. RELATABLE STRUGGLE — shares real story of debt and $11 per hour. SIMPLICITY PROOF — shows the actual simple system: 2-page funnel, daily emails, done. FAMILY FREEDOM ANCHOR — connects income to never missing a family moment. ACTION CTA — always ends with do the thing, one clear next step.",videoFormats:["Raw Phone Selfie: Selfie mode, portrait, no studio. Kitchen, car, bedroom — wherever you are. The rawness IS the credibility. Fast delivery, bold one-liner opener.","Duet or Stitch: React to content about financial struggle or 9-to-5 life. Add your perspective and bridge to the opportunity. High reach.","Lifestyle B-Roll and Voiceover: Home, family, laptop, morning routine. Voiceover tells your story. Text captions reinforce key lines.","Screen and Voiceover: Show your laptop screen, the funnel, the dashboard, the commissions. Narrate in plain language. Demystifying tech is his superpower."]},jeremiahWilliams:{id:"jeremiahWilliams",name:"Jeremiah Williams",handle:"@motivatingincome_jeremiah",emoji:"🚀",color:"#10b981",vibe:"High energy, Instagram-first, zero excuses. Speaks directly to beginners starting from zero. Fast, direct, action-first coaching.",platforms:["Instagram Reels","Instagram Stories","TikTok"],hooks:["How to earn one to five thousand a day from Instagram even starting from zero","From zero to $100K online — here is the actual path no one talks about","You do not need followers. You need the right strategy. Here is mine","I made my first $1K online with zero followers and no product","The Instagram income strategy that actually works for complete beginners"],framework:"ZERO TO INCOME HOOK — speaks to people starting from nothing. POSSIBILITY STATEMENT — makes big income days feel real and achievable. INSTAGRAM TACTICS — Reels hooks, bio optimisation, DM strategy, link in bio. BEGINNER EMPATHY — acknowledges no audience, no experience is fine. SPEED CTA — start today, DM me the word START.",videoFormats:["High Energy Face to Camera: Portrait mode, fast confident delivery. Hook spoken OUT LOUD in first 2 seconds before text appears. Quick cuts. Bold captions. End with: DM me the word START.","Income Proof Walkthrough: Screen record showing real results — dashboard, notifications, commissions. Narrate what you see. Add your face in a corner bubble for authenticity.","DM Funnel Story: Question or bold statement in Stories. Poll to get taps. Reply to every person who engages. Stories bridge audience to inbox to buyer.","Myth Bust Rapid Fire: Face to camera. Rapid myth busting — You need big following: WRONG. You need to be techy: WRONG. Fast paced and very shareable."]}};
+
+const NICHE_QS=[{id:"topics",label:"What topics could you talk about for hours without getting bored?",placeholder:"e.g. fitness, budgeting, being a mum, side hustles, cooking, travel, mindset, gardening...",hint:"Do not overthink it — what do friends and family actually ask YOUR advice on?"},{id:"audience",label:"Who do you most want to help?",placeholder:"e.g. women over 40, burnt-out 9-to-5 workers, single mums, retirees, young dads...",hint:"Think about who you ARE or who you deeply understand from personal experience."},{id:"story",label:"What is your own story? What have you struggled with or overcome?",placeholder:"e.g. I was in debt, stuck in a job I hated, going through a divorce, tired of being broke every month...",hint:"This is your biggest asset. People buy from people they can relate to — your struggle is your superpower."},{id:"platform",label:"What feels most natural to you when sharing online?",placeholder:"e.g. filming short videos on my phone, writing posts and captions, going live, posting photos and reels...",hint:"Pick what you would actually do consistently — not what you think you should do. Consistency beats perfection."},{id:"timeGoal",label:"How much time can you realistically give this each week, and what is your income goal?",placeholder:"e.g. 5 hours a week. Want to make an extra 500 pounds a month within 3 months, then scale from there...",hint:"Honest answers lead to a realistic plan that actually works. Overcommitting leads to burnout and quitting."},{id:"tried",label:"What have you already tried online — and what happened?",placeholder:"e.g. tried dropshipping but hated the tech, did another MLM and felt uncomfortable, never tried anything yet...",hint:"This helps us avoid recommending something that already did not work for you — so we can find what will work."}];
+
+const S={profile:null,theme:"dark",tab:"welcome",completedSteps:new Set(),nicheStep:"questions",nicheAnswers:{},nicheCurrent:0,nicheResult:"",contentMentor:null,contentPlatform:null,contentMode:"fresh",contentPaste:"",contentResult:"",dailyResult:"",coachMentor:null,coachMessages:[],coachLoading:false,loading:{}};
+
+// ── AUTH & PERSISTENCE ──────────────────────────────────────────────────────
+// Simple hash for password storage (not cryptographic — for localStorage only)
+function hashPw(pw){let h=0;for(let i=0;i<pw.length;i++){h=((h<<5)-h)+pw.charCodeAt(i);h|=0;}return h.toString(36);}
+
+function acctKey(email){return"ab_acct_"+email.toLowerCase().replace(/[^a-z0-9]/g,"_");}
+function dataKey(email){return"ab_data_"+email.toLowerCase().replace(/[^a-z0-9]/g,"_");}
+
+function getAllAccounts(){return JSON.parse(localStorage.getItem("ab_accounts")||"[]");}
+function saveAccountIndex(email){const accts=getAllAccounts();if(!accts.includes(email.toLowerCase()))accts.push(email.toLowerCase());localStorage.setItem("ab_accounts",JSON.stringify(accts));}
+
+function createAccount(name,email,pw){
+  const e=email.toLowerCase().trim();
+  const acct={name,email:e,pwHash:hashPw(pw),createdAt:Date.now()};
+  localStorage.setItem(acctKey(e),JSON.stringify(acct));
+  saveAccountIndex(e);
+  return acct;
+}
+
+function getAccount(email){
+  const raw=localStorage.getItem(acctKey(email.toLowerCase().trim()));
+  return raw?JSON.parse(raw):null;
+}
+
+function checkPassword(email,pw){
+  const acct=getAccount(email);
+  if(!acct)return null;
+  return acct.pwHash===hashPw(pw)?acct:null;
+}
+
+function generateRecoveryCode(email){
+  const code=Math.floor(100000+Math.random()*900000).toString();
+  const e=email.toLowerCase().trim();
+  localStorage.setItem("ab_recovery_"+e,JSON.stringify({code,expires:Date.now()+3600000}));
+  return code;
+}
+
+function verifyRecoveryCode(email,code){
+  const raw=localStorage.getItem("ab_recovery_"+email.toLowerCase().trim());
+  if(!raw)return false;
+  const d=JSON.parse(raw);
+  return d.code===code&&d.expires>Date.now();
+}
+
+function resetPassword(email,newPw){
+  const e=email.toLowerCase().trim();
+  const acct=getAccount(e);
+  if(!acct)return false;
+  acct.pwHash=hashPw(newPw);
+  localStorage.setItem(acctKey(e),JSON.stringify(acct));
+  localStorage.removeItem("ab_recovery_"+e);
+  return true;
+}
+
+function savePro(){
+  if(!S.profile)return;
+  const d={name:S.profile.name,email:S.profile.email,productId:S.profile.productId,theme:S.theme,nicheAnswers:S.nicheAnswers,nicheResult:S.nicheResult,nicheStep:S.nicheStep,completedSteps:[...S.completedSteps],savedAt:Date.now()};
+  localStorage.setItem(dataKey(S.profile.email),JSON.stringify(d));
+}
+
+function loadProData(email){
+  const raw=localStorage.getItem(dataKey(email.toLowerCase().trim()));
+  return raw?JSON.parse(raw):null;
+}
+
+function applyPro(acct,data){
+  S.profile={name:acct.name,email:acct.email,productId:data?.productId||null};
+  S.theme=data?.theme||"dark";
+  S.nicheAnswers=data?.nicheAnswers||{};
+  S.nicheResult=data?.nicheResult||"";
+  S.nicheStep=data?.nicheResult?"result":"questions";
+  S.completedSteps=new Set(data?.completedSteps||[]);
+  S.tab="welcome";
+  document.body.className=S.theme;
+}
+
+// Login screen state
+const LS={screen:"login",loginEmail:"",loginPw:"",regName:"",regEmail:"",regPw:"",regPw2:"",recEmail:"",recCode:"",recNewPw:"",recStep:"email",error:"",errorField:"",success:"",showPw:false};
+
+async function ai(sys,user,msgs){const body={model:"claude-sonnet-4-20250514",max_tokens:1000,system:sys};body.messages=msgs||[{role:"user",content:user}];const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});const d=await r.json();return d.content?.[0]?.text||"Something went wrong. Please try again.";}
+
+function H(s){if(!s)return"";return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function Hp(s){if(!s)return"";return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+function render(){document.body.className=S.theme;document.getElementById("root").innerHTML=S.profile?rApp():rLogin();bind();}
+
+function bind(){
+  document.querySelectorAll("[data-theme]").forEach(el=>el.onclick=()=>{S.theme=el.dataset.theme;document.body.className=S.theme;savePro();render();});
+  document.querySelectorAll("[data-tab]").forEach(el=>el.onclick=()=>{S.tab=el.dataset.tab;render();});
+  document.querySelectorAll("[data-act]").forEach(el=>el.onclick=e=>act(el.dataset.act,el));
+  document.querySelectorAll("[data-prod]").forEach(el=>el.onclick=()=>{S.profile.productId=el.dataset.prod;S.completedSteps.add("setup");savePro();render();});
+  document.querySelectorAll("[data-cmtr]").forEach(el=>el.onclick=()=>{S.contentMentor=el.dataset.cmtr;S.contentPlatform=MENTORS[el.dataset.cmtr].platforms[0];S.contentResult="";render();});
+  document.querySelectorAll("[data-plat]").forEach(el=>el.onclick=()=>{S.contentPlatform=el.dataset.plat;S.contentResult="";render();});
+  document.querySelectorAll("[data-mode]").forEach(el=>el.onclick=()=>{S.contentMode=el.dataset.mode;S.contentResult="";render();});
+  document.querySelectorAll("[data-cmch]").forEach(el=>el.onclick=()=>{S.coachMentor=el.dataset.cmch;S.coachMessages=[];render();});
+  document.querySelectorAll("[data-nq]").forEach(el=>el.onclick=()=>{S.nicheCurrent=+el.dataset.nq;render();});
+  document.querySelectorAll("[data-key]").forEach(el=>el.oninput=e=>{const k=e.target.dataset.key;if(k.startsWith("nq_"))S.nicheAnswers[k.slice(3)]=e.target.value;else if(k==="paste")S.contentPaste=e.target.value;if(S.profile)savePro();});
+  document.querySelectorAll("[data-copy]").forEach(el=>el.onclick=()=>{const txt=document.getElementById(el.dataset.copy)?.innerText||"";navigator.clipboard.writeText(txt).then(()=>{el.textContent="Copied!";el.style.background="#22c55e";el.style.color="#fff";setTimeout(()=>{el.textContent="Copy";el.style.background="";el.style.color="";},2000);});});
+  const ci=document.getElementById("chat-in");if(ci)ci.onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();act("coach_send");}};
+  const cm=document.getElementById("chat-msgs");if(cm)cm.scrollTop=cm.scrollHeight;
+}
+
+async function act(a,el){
+  if(a==="auth_tab"){LS.screen=el.dataset.screen;LS.error="";LS.errorField="";LS.success="";render();return;}
+  if(a==="toggle_pw"){LS.showPw=!LS.showPw;const f=document.getElementById("pw-field");if(f)f.type=LS.showPw?"text":"password";const f2=document.getElementById("reg-pw-field");if(f2)f2.type=LS.showPw?"text":"password";return;}
+
+  if(a==="sign_in"){
+    const email=(document.getElementById("li-email")?.value||"").trim();
+    const pw=(document.getElementById("li-pw")?.value||"").trim();
+    if(!email||!pw){LS.error="Please enter your email and password.";render();return;}
+    const acct=checkPassword(email,pw);
+    if(!acct){LS.error="Incorrect email or password. Check your details and try again.";render();return;}
+    const data=loadProData(email);
+    applyPro(acct,data);render();return;
+  }
+
+  if(a==="register"){
+    LS.regName=(document.getElementById("reg-name")?.value||"").trim();
+    LS.regEmail=(document.getElementById("reg-email")?.value||"").trim();
+    LS.regPw=(document.getElementById("reg-pw-field")?.value||"");
+    LS.regPw2=(document.getElementById("reg-pw2-field")?.value||"");
+    LS.errorField="";
+    if(!LS.regName){LS.error="Please enter your first name.";LS.errorField="name";render();return;}
+    if(!LS.regEmail){LS.error="Please enter your email address.";LS.errorField="email";render();return;}
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(LS.regEmail)){LS.error="That email doesn't look right — please check it.";LS.errorField="email";render();return;}
+    if(!LS.regPw||LS.regPw.length<6){LS.error="Password must be at least 6 characters.";LS.errorField="pw";render();return;}
+    if(!LS.regPw2){LS.error="Please confirm your password.";LS.errorField="pw2";render();return;}
+    if(LS.regPw!==LS.regPw2){LS.error="Passwords don't match — please check and try again.";LS.errorField="pw2";render();return;}
+    if(getAccount(LS.regEmail)){LS.error="An account with this email already exists. Try signing in instead.";LS.errorField="email";render();return;}
+    const acct=createAccount(LS.regName,LS.regEmail,LS.regPw);
+    LS.regName="";LS.regEmail="";LS.regPw="";LS.regPw2="";LS.errorField="";
+    applyPro(acct,null);render();return;
+  }
+
+  if(a==="recovery_send"){
+    const email=(document.getElementById("rec-email")?.value||"").trim();
+    if(!email){LS.error="Please enter your email address.";render();return;}
+    if(!getAccount(email)){LS.error="No account found with that email address.";render();return;}
+    const code=generateRecoveryCode(email);
+    LS.recEmail=email;LS.recStep="code";LS.error="";
+    // Show code in a visible alert since we can't send real emails inside Claude
+    LS.success="Recovery code generated! Your code is: "+code+" (in a real deployment this would be emailed to you — note it down now)";
+    render();return;
+  }
+
+  if(a==="recovery_verify"){
+    const code=(document.getElementById("rec-code")?.value||"").trim();
+    if(!code){LS.error="Please enter the recovery code.";render();return;}
+    if(!verifyRecoveryCode(LS.recEmail,code)){LS.error="Invalid or expired code. Please request a new one.";render();return;}
+    LS.recStep="reset";LS.error="";LS.success="Code verified! Now set your new password.";render();return;
+  }
+
+  if(a==="recovery_reset"){
+    const newPw=(document.getElementById("rec-newpw")?.value||"").trim();
+    const newPw2=(document.getElementById("rec-newpw2")?.value||"").trim();
+    if(!newPw||!newPw2){LS.error="Please enter and confirm your new password.";render();return;}
+    if(newPw.length<6){LS.error="Password must be at least 6 characters.";render();return;}
+    if(newPw!==newPw2){LS.error="Passwords do not match.";render();return;}
+    resetPassword(LS.recEmail,newPw);
+    LS.screen="login";LS.recStep="email";LS.error="";LS.success="Password reset successfully! You can now sign in with your new password.";render();return;
+  }
+
+  if(a==="logout"){savePro();S.profile=null;S.tab="welcome";LS.screen="login";LS.error="";LS.success="";render();return;}
+  if(a==="guest"){S.profile={name:"Guest",email:"guest",productId:null};S.completedSteps=new Set();S.nicheAnswers={};S.nicheResult="";S.nicheStep="questions";S.tab="welcome";document.body.className=S.theme;render();return;}
+  if(a==="quick"){const email=el.dataset.email;const acct=getAccount(email);if(!acct)return;const data=loadProData(email);applyPro(acct,data);render();return;}
+  if(a==="go_niche"){S.tab="niche";render();return;}
+  if(a==="go_content"){S.tab="content";render();return;}
+  if(a==="go_setup"){S.tab="setup";render();return;}
+  if(a==="go_daily"){S.tab="daily";render();return;}
+  if(a==="content_switch"){S.contentMentor=null;S.contentResult="";render();return;}
+  if(a==="coach_switch"){S.coachMentor=null;S.coachMessages=[];render();return;}
+  if(a==="niche_next"){if(S.nicheCurrent<5)S.nicheCurrent++;render();return;}
+  if(a==="niche_back"){if(S.nicheCurrent>0)S.nicheCurrent--;render();return;}
+  if(a==="niche_reset"){S.nicheStep="questions";S.nicheResult="";S.nicheCurrent=0;render();return;}
+
+  if(a==="niche_gen"){
+    S.nicheStep="loading";render();
+    const p=PRODUCTS[S.profile.productId];
+    const pctx=p.id==="saf"?"PRODUCT (NEVER name it in output — say what you promote or your opportunity): Done-for-you affiliate system. One link. 8 income streams. Free to join. 146K members. Daily up to $900. 14-day automated emails. WIN: Personal brand first, story, trust, funnel closes in background.":"PRODUCT (NEVER name it — say what you promote or your health membership): Health and wellness affiliate marketing with matrix spillover. $9.95 per month. Personal health transformation story is the core angle.";
+    const txt=NICHE_QS.map(q=>q.label+"\nAnswer: "+(S.nicheAnswers[q.id]||"not answered")).join("\n\n");
+    const sys="You are a world-class niche strategist and personal brand coach. Use plain text with ALL CAPS section headers. No markdown symbols or bullet characters. Be specific, personal, and direct. Reference the user's actual answers — never be generic.";
+    const msg="Build a personalised niche strategy for "+S.profile.name+".\n\nTHEIR ANSWERS:\n"+txt+"\n\n"+pctx+"\n\nSections:\n\nYOUR NICHE IN ONE SENTENCE: One powerful positioning statement built around this person and the transformation they offer. No product names.\n\nWHY THIS NICHE WORKS FOR YOU: Reference their specific story and background. Why is their experience an unfair advantage?\n\nYOUR IDEAL PERSON: Give them a name, age, situation, fears, and desires. Make it feel like a real person.\n\nYOUR CONTENT ANGLE: Based on their platform preference — exact tone, format, frequency. What should their first 5 posts be about?\n\nINCOME ROADMAP: Realistic 30, 60, and 90 day milestones based on their time and income goal.\n\nRED FLAGS TO AVOID: Based on what they have already tried — what traps to steer clear of.\n\nMax 520 words. Be personal. Reference their actual words. Never name any product or brand.";
+    S.nicheResult=await ai(sys,msg);S.nicheStep="result";S.completedSteps.add("niche");savePro();render();return;
+  }
+
+  if(a==="content_gen"){
+    if(!S.contentMentor||!S.contentPlatform)return;
+    S.loading.content=true;render();
+    const m=MENTORS[S.contentMentor];
+    const p=PRODUCTS[S.profile.productId];
+
+    // Pull niche answers so posts are grounded in the person's real story
+    const nq=S.nicheAnswers;
+    const hasNiche=nq&&Object.values(nq).some(v=>v&&v.trim().length>2);
+    const nicheCtx=hasNiche?`
+PERSON'S REAL STORY AND NICHE (this is the MOST IMPORTANT part — everything leads with this):
+- Topics they are passionate about: ${nq.topics||"not specified"}
+- Who they want to help: ${nq.audience||"not specified"}
+- Their personal story and struggle: ${nq.story||"not specified"}
+- Their natural platform style: ${nq.platform||"not specified"}
+- Their income goal and time available: ${nq.timeGoal||"not specified"}
+
+THE CONTENT RULE: Posts must be almost entirely about this person's story, passions, and the audience they serve. The income opportunity is mentioned only at the very end as a soft afterthought — like "oh by the way, the link in my bio is what I use" — never as the headline or focus. Lead with LIFE, not with money.`:`
+PERSON: ${S.profile.name}
+NOTE: No niche strategy has been completed yet. Write posts based on general authentic personal brand principles — focus on real life, real struggles, real wins. The income opportunity is only a light mention at the end.`;
+
+    const pctx=p.id==="saf"?`INCOME OPPORTUNITY CONTEXT (background only — sprinkle lightly at the end of posts, never lead with it): Person uses a done-for-you system that earns them income online. They mention it only as "what I use", "the link in my bio", "something I found that changed things" — always as an almost-accidental discovery, never as a sales pitch.`:`INCOME OPPORTUNITY CONTEXT (background only — sprinkle lightly at the end of posts, never lead with it): Person uses a health and wellness membership that saves them money and earns them income. They mention it only as "what I take", "something I found", "the membership I use" — always incidentally, never as the focus.`;
+
+    const sys=`You are a viral content strategist who deeply understands ${m.name}'s content style and proven frameworks. You write posts that feel like real lived experience — not marketing. The person's STORY is everything. The income mention is barely there, almost like an afterthought dropped at the end. Plain text only. No markdown. No hashtags.`;
+
+    let msg="";
+
+    if(S.contentMode==="fresh"){
+      msg=`Write 3 viral ${S.contentPlatform} posts for ${S.profile.name}.
+
+${nicheCtx}
+
+${pctx}
+
+MENTOR STYLE: ${m.name} — ${m.vibe}
+FRAMEWORK: ${m.framework}
+HOOK INSPIRATION (do not copy — use as style reference only): ${m.hooks.slice(0,3).join(" | ")}
+VIDEO FORMAT GUIDANCE: ${m.videoFormats[0]}
+
+CONTENT BRIEF:
+- Post 1: Lead with their personal story or struggle. What was life like before? What shifted? The income thing is a tiny mention at the very end if at all.
+- Post 2: Lead with their passion or the audience they help. Give real value or insight about that topic. The income thing is a one-liner at the end: "oh and the link in my bio is how I earn from this"
+- Post 3: Lead with a relatable moment, feeling, or observation from their real life. The income angle is so soft it almost feels accidental.
+
+CRITICAL RULES:
+- NEVER mention any product name or brand name
+- The income opportunity should feel like a footnote, not the point
+- If someone read these posts they should think "this person is genuinely living this life" not "this person is trying to sell me something"
+- Write in first person as ${S.profile.name}
+- Each post a completely different angle
+
+Separate posts with ---`;
+    }
+
+    else if(S.contentMode==="hook"){
+      msg=`Write 10 scroll-stopping hooks in ${m.name}'s style for ${S.contentPlatform}.
+
+${nicheCtx}
+
+MENTOR HOOK STYLE: ${m.hooks.join(" | ")}
+MENTOR VOICE: ${m.vibe}
+
+HOOK BRIEF:
+Hooks should be about the person's real life, their passion topics, or the audience they serve. NOT about making money. Think: what would stop someone in this person's target audience mid-scroll because it spoke directly to their life?
+
+Examples of the RIGHT energy:
+- Something about their passion topic that their audience deeply relates to
+- A bold truth about the struggle their audience faces
+- A surprising observation about their niche topic
+- A before/after moment from their real life
+
+CRITICAL: No income or money hooks. No "how I made X" hooks. Pure life, passion, and audience connection. Under 12 words each. Number 1 to 10.`;
+    }
+
+    else{
+      const paste=(document.getElementById("paste-box")?.value||S.contentPaste||"").trim();
+      msg=`Remix this viral post for ${S.profile.name} on ${S.contentPlatform} in ${m.name}'s authentic style.
+
+ORIGINAL POST TO REMIX:
+"${paste}"
+
+${nicheCtx}
+
+${pctx}
+
+MENTOR: ${m.name} — ${m.vibe}
+FRAMEWORK: ${m.framework}
+
+REMIX BRIEF:
+Keep the energy and structure that makes the original post viral. But rewrite it so it:
+- Feels like it comes from ${S.profile.name}'s real life and story
+- Speaks to their specific audience
+- Connects to their passion topics
+- Only mentions the income opportunity as a very light afterthought at the end if relevant at all
+
+CRITICAL: No product names. Return only the rewritten post.`;
+    }
+
+    S.contentResult=await ai(sys,msg);
+    S.loading.content=false;S.completedSteps.add("content");savePro();render();return;
+  }
+
+  if(a==="daily_gen"){
+    S.loading.daily=true;render();
+    const p=PRODUCTS[S.profile.productId];
+    const nq=S.nicheAnswers;
+    const hasNiche=nq&&Object.values(nq).some(v=>v&&v.trim().length>2);
+    const nicheHint=hasNiche?`THEIR NICHE CONTEXT: They talk about "${nq.topics||""}" and help "${nq.audience||""}". Their story: "${nq.story||""}". Platform style: ${nq.platform||""}. Income goal: ${nq.timeGoal||""}.`:"";
+    const hints=p.id==="saf"?"Their online income comes from a done-for-you affiliate system. Their job is creating authentic content and driving traffic — the system handles everything else.":"Their online income comes from sharing health and wellness products they personally use through an affiliate membership.";
+    const today=new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+    const sys="You are a direct, no-fluff online business coach. NEVER name any product or company. ALWAYS speak directly to "+S.profile.name+" using you and your — never third person. Plain text only.";
+    const msg="It is "+today+". Write a Daily Drop action plan speaking DIRECTLY to "+S.profile.name+".\n\n"+hints+"\n\n"+nicheHint+"\n\nIMPORTANT: Actions should be grounded in their real niche, topics, and audience — not generic 'make money online' advice. The income is the outcome of them showing up authentically in their niche, not the message itself.\n\nFormat:\n\nTODAY'S FOCUS\nOne sentence directly to "+S.profile.name+" — grounded in their niche and real life, not in making money.\n\nYOUR 3 ACTIONS\nTell "+S.profile.name+" exactly what to do with realistic time estimates. These should relate to their passion topics and audience, not just traffic tasks. Use you not they. Be specific.\n\nYOUR INCOME MOVE\nThe one action today that builds toward income — but frame it as serving their audience or sharing their story, not as a money task.\n\nMINDSET MINUTE\nSpeak straight to "+S.profile.name+" — 2 sentences like a coach who genuinely believes in them.\n\nNo product names. No third person. Address "+S.profile.name+" directly throughout.";
+    S.dailyResult=await ai(sys,msg);S.loading.daily=false;S.completedSteps.add("daily");savePro();render();return;
+  }
+
+  if(a==="coach_send"){
+    const input=(document.getElementById("chat-in")?.value||"").trim();if(!input||S.coachLoading)return;
+    S.coachLoading=true;S.coachMessages.push({role:"user",content:input});render();
+    const m=MENTORS[S.coachMentor];const p=S.profile.productId?PRODUCTS[S.profile.productId]:null;
+    const pctx=p?.id==="saf"?"Person promotes a done-for-you affiliate income system. NEVER name it. Say what you promote or your system.":p?.id==="livegood"?"Person promotes a health and wellness affiliate membership with matrix spillover. NEVER name it. Say what you promote.":"";
+    const sys="You are a world-class online business coach inspired by "+m.name+"'s philosophy and teaching style.\n\n"+m.name+"'s approach: "+m.vibe+"\n"+m.name+"'s framework: "+m.framework+"\n\nYou are coaching "+S.profile.name+".\n"+pctx+"\n\nRules: Speak directly to "+S.profile.name+" using you and your. Be warm, specific, and genuinely helpful. End every response with ONE clear next action they can take today. Keep answers to 3 to 6 sentences unless more is asked. NEVER name any product, brand, or company — say what you promote, your business, or your opportunity. Never preach.";
+    const reply=await ai(sys,null,S.coachMessages);S.coachMessages.push({role:"assistant",content:reply});S.coachLoading=false;S.completedSteps.add("coach");savePro();render();return;
+  }
+}
+
+function rLogin(){
+  const accts=getAllAccounts();
+  const themeBar=`<div style="display:flex;gap:6px;justify-content:center;margin-bottom:24px;flex-wrap:wrap">${["dark","light","contrast"].map(t=>`<button class="theme-btn${S.theme===t?" active":""}" data-theme="${t}">${t==="dark"?"🌙 Dark":t==="light"?"☀️ Light":"🔆 High Contrast"}</button>`).join("")}</div>`;
+  const logo=`<div style="text-align:center;margin-bottom:22px"><div style="font-size:48px;margin-bottom:10px">✦</div><h1 style="font-family:'Syne',sans-serif;font-size:26px;font-weight:800;margin-bottom:6px">Affiliate Bestie</h1><p class="t-sub" style="font-size:15px;line-height:1.6">Your AI-powered income coach</p></div>`;
+  const tabs=`<div class="auth-tabs"><button data-act="auth_tab" data-screen="login" class="auth-tab-btn${LS.screen==="login"?" active":""}">Sign In</button><button data-act="auth_tab" data-screen="register" class="auth-tab-btn${LS.screen==="register"?" active":""}">Create Account</button><button data-act="auth_tab" data-screen="recovery" class="auth-tab-btn${LS.screen==="recovery"?" active":""}">Forgot Password</button></div>`;
+  const errBox=LS.error?`<div style="background:#ef444418;border:2px solid #ef444440;border-radius:9px;padding:12px 16px;font-size:14px;color:#ef4444;margin-bottom:16px;line-height:1.5">⚠️ ${LS.error}</div>`:"";
+  const okBox=LS.success?`<div style="background:#22c55e18;border:2px solid #22c55e40;border-radius:9px;padding:12px 16px;font-size:14px;color:#22c55e;margin-bottom:16px;line-height:1.5">✅ ${LS.success}</div>`:"";
+
+  let body="";
+
+  if(LS.screen==="login"){
+    const recent=accts.slice(-3).reverse();
+    body=`
+    ${recent.length?`<div style="margin-bottom:20px"><div style="font-size:13px;font-weight:700;color:var(--muted);letter-spacing:1px;margin-bottom:10px">RECENT ACCOUNTS</div><div style="display:flex;flex-direction:column;gap:7px">${recent.map(e=>{const a=getAccount(e);return`<button data-act="quick" data-email="${H(e)}" style="display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--card);border:2px solid var(--border);border-radius:10px;padding:11px 15px;font-size:15px;font-weight:600;color:var(--text)"><div style="width:34px;height:34px;border-radius:50%;background:#6366f120;border:2px solid #6366f140;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">👤</div><div style="flex:1"><div style="font-weight:700;font-size:15px">${H(a?.name||e)}</div><div class="t-muted" style="font-size:12px">${H(e)}</div></div><span style="color:#6366f1;font-size:14px">→</span></button>`;}).join("")}</div></div><div style="display:flex;align-items:center;gap:10px;margin-bottom:18px"><div style="flex:1;height:2px;background:var(--border)"></div><span class="t-muted" style="font-size:13px;font-weight:700">OR SIGN IN WITH PASSWORD</span><div style="flex:1;height:2px;background:var(--border)"></div></div>`:""} 
+    <div style="margin-bottom:14px"><label style="display:block;font-size:15px;font-weight:700;margin-bottom:9px">Email address</label><input id="li-email" type="email" placeholder="you@example.com" style="font-size:15px"/></div>
+    <div style="margin-bottom:6px"><label style="display:block;font-size:15px;font-weight:700;margin-bottom:9px">Password</label><div style="position:relative"><input id="pw-field" type="password" placeholder="Your password" style="font-size:15px;padding-right:50px"/><button onclick="LS.showPw=!LS.showPw;const f=document.getElementById('pw-field');f.type=LS.showPw?'text':'password';this.textContent=LS.showPw?'Hide':'Show';" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);font-size:13px;font-weight:700;padding:4px">Show</button></div></div>
+    <div style="text-align:right;margin-bottom:18px"><button data-act="auth_tab" data-screen="recovery" style="background:none;border:none;color:#6366f1;font-size:13px;font-weight:600;cursor:pointer">Forgot your password?</button></div>
+    <button class="btn btn-indigo" data-act="sign_in" style="width:100%;padding:14px;font-size:16px">Sign In →</button>
+    <p class="t-muted" style="font-size:13px;text-align:center;margin-top:14px">Don't have an account? <button data-act="auth_tab" data-screen="register" style="background:none;border:none;color:#6366f1;font-size:13px;font-weight:700;cursor:pointer">Create one →</button></p>`;
+  }
+
+  else if(LS.screen==="register"){
+    // Helper: border color based on whether this field has the error
+    const fb=(field)=>LS.errorField===field?"border-color:#ef4444;background:#ef444408;":"";
+    const fl=(field)=>LS.errorField===field?`<span style="color:#ef4444;font-size:13px;font-weight:600;margin-left:6px">← check this</span>`:"";
+    body=`
+    <div style="margin-bottom:14px">
+      <label style="display:block;font-size:15px;font-weight:700;margin-bottom:9px">Your first name ${fl("name")}</label>
+      <input id="reg-name" type="text" placeholder="e.g. Jessica" value="${H(LS.regName)}" style="font-size:15px;${fb("name")}"/>
+    </div>
+    <div style="margin-bottom:14px">
+      <label style="display:block;font-size:15px;font-weight:700;margin-bottom:9px">Email address <span style="color:var(--muted);font-weight:400;font-size:13px">— used for password recovery</span> ${fl("email")}</label>
+      <input id="reg-email" type="email" placeholder="you@example.com" value="${H(LS.regEmail)}" style="font-size:15px;${fb("email")}"/>
+    </div>
+    <div style="margin-bottom:14px">
+      <label style="display:block;font-size:15px;font-weight:700;margin-bottom:9px">Create a password <span style="color:var(--muted);font-weight:400;font-size:13px">— min 6 characters</span> ${fl("pw")}</label>
+      <div style="position:relative">
+        <input id="reg-pw-field" type="${LS.showPw?"text":"password"}" placeholder="At least 6 characters" value="${H(LS.regPw)}" style="font-size:15px;padding-right:50px;${fb("pw")}"/>
+        <button onclick="LS.showPw=!LS.showPw;['reg-pw-field','reg-pw2-field'].forEach(id=>{const f=document.getElementById(id);if(f)f.type=LS.showPw?'text':'password';});this.textContent=LS.showPw?'Hide':'Show';" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);font-size:13px;font-weight:700;padding:4px">${LS.showPw?"Hide":"Show"}</button>
+      </div>
+    </div>
+    <div style="margin-bottom:20px">
+      <label style="display:block;font-size:15px;font-weight:700;margin-bottom:9px">Confirm password ${fl("pw2")}</label>
+      <input id="reg-pw2-field" type="${LS.showPw?"text":"password"}" placeholder="Type your password again" value="${H(LS.regPw2)}" style="font-size:15px;${fb("pw2")}"/>
+    </div>
+    <div class="card" style="margin-bottom:18px;border-color:#6366f130;padding:14px 16px">
+      <div style="font-size:13px;color:var(--sub);line-height:1.65">🔒 <strong style="color:var(--text)">Your data stays on this device.</strong> Your progress, niche strategy, and settings are saved in your browser. Your email is stored only for password recovery — we never send marketing emails.</div>
+    </div>
+    <button class="btn btn-orange" data-act="register" style="width:100%;padding:14px;font-size:16px">Create My Account →</button>
+    <p class="t-muted" style="font-size:13px;text-align:center;margin-top:14px">Already have an account? <button data-act="auth_tab" data-screen="login" style="background:none;border:none;color:#6366f1;font-size:13px;font-weight:700;cursor:pointer">Sign in →</button></p>`;
+  }
+
+  else if(LS.screen==="recovery"){
+    if(LS.recStep==="email"){
+      body=`
+      <div style="margin-bottom:8px"><div style="font-size:22px;text-align:center;margin-bottom:10px">🔑</div><h3 style="font-size:18px;font-weight:700;text-align:center;margin-bottom:8px">Password Recovery</h3><p class="t-sub" style="font-size:15px;text-align:center;line-height:1.65;margin-bottom:20px">Enter the email address you registered with and we'll generate a recovery code for you.</p></div>
+      <div style="margin-bottom:18px"><label style="display:block;font-size:15px;font-weight:700;margin-bottom:9px">Your registered email</label><input id="rec-email" type="email" placeholder="you@example.com" style="font-size:15px"/></div>
+      <button class="btn btn-purple" data-act="recovery_send" style="width:100%;padding:14px;font-size:16px">Generate Recovery Code →</button>
+      <p class="t-muted" style="font-size:13px;text-align:center;margin-top:14px"><button data-act="auth_tab" data-screen="login" style="background:none;border:none;color:#6366f1;font-size:13px;font-weight:700;cursor:pointer">← Back to Sign In</button></p>`;
+    } else if(LS.recStep==="code"){
+      body=`
+      <div style="font-size:22px;text-align:center;margin-bottom:10px">📋</div>
+      <h3 style="font-size:18px;font-weight:700;text-align:center;margin-bottom:8px">Enter Your Recovery Code</h3>
+      <p class="t-sub" style="font-size:15px;text-align:center;line-height:1.65;margin-bottom:20px">Check the success message above for your recovery code. In a live deployment this would be sent to <strong>${H(LS.recEmail)}</strong>.</p>
+      <div style="margin-bottom:18px"><label style="display:block;font-size:15px;font-weight:700;margin-bottom:9px">Recovery code</label><input id="rec-code" type="text" placeholder="6-digit code" style="font-size:18px;letter-spacing:4px;text-align:center"/></div>
+      <button class="btn btn-purple" data-act="recovery_verify" style="width:100%;padding:14px;font-size:16px">Verify Code →</button>`;
+    } else {
+      body=`
+      <div style="font-size:22px;text-align:center;margin-bottom:10px">🔒</div>
+      <h3 style="font-size:18px;font-weight:700;text-align:center;margin-bottom:8px">Set New Password</h3>
+      <div style="margin-bottom:14px;margin-top:16px"><label style="display:block;font-size:15px;font-weight:700;margin-bottom:9px">New password</label><input id="rec-newpw" type="password" placeholder="At least 6 characters" style="font-size:15px"/></div>
+      <div style="margin-bottom:20px"><label style="display:block;font-size:15px;font-weight:700;margin-bottom:9px">Confirm new password</label><input id="rec-newpw2" type="password" placeholder="Type it again" style="font-size:15px"/></div>
+      <button class="btn btn-green" data-act="recovery_reset" style="width:100%;padding:14px;font-size:16px">Reset Password →</button>`;
+    }
+  }
+
+  return`<div class="login-wrap"><div class="login-box" style="animation:fadeIn 0.3s ease">${logo}${themeBar}${tabs}${errBox}${okBox}${body}<div style="display:flex;align-items:center;gap:12px;margin:22px 0"><div style="flex:1;height:2px;background:var(--border)"></div><span class="t-muted" style="font-size:13px;font-weight:700">JUST BROWSING?</span><div style="flex:1;height:2px;background:var(--border)"></div></div><button class="btn btn-ghost" data-act="guest" style="width:100%;padding:13px;font-size:15px;border-style:dashed">👀 Try it without an account</button><p class="t-muted" style="font-size:12px;text-align:center;margin-top:8px">Guest mode — nothing is saved between sessions</p></div></div>`;
+}
+
+function rApp(){const c=S.completedSteps;const p=S.profile.productId?PRODUCTS[S.profile.productId]:null;const TABS=[{id:"welcome",label:"👋 Start Here"},{id:"setup",label:"🎯 1. My Product"},{id:"niche",label:"🧠 2. My Niche"},{id:"content",label:"✨ 3. Content"},{id:"daily",label:"📋 4. Daily Drop"},{id:"coach",label:"💬 5. AI Coach"}];const sC={setup:"#f97316",niche:"#8b5cf6",content:"#ec4899",daily:"#22c55e",coach:"#06b6d4"};const ac=sC[S.tab]||"#6366f1";return`<div class="wrap"><div style="padding-top:22px;padding-bottom:10px"><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px"><div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#f97316,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">✦</div><div style="flex:1"><h1 style="font-size:22px;font-weight:800;line-height:1">Affiliate Bestie</h1><p class="t-muted" style="font-size:13px">Hey ${H(S.profile.name)} 👋 — your AI income coach</p></div><div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">${["dark","light","contrast"].map(t=>`<button class="theme-btn${S.theme===t?" active":""}" data-theme="${t}" title="${t==="dark"?"Dark mode":t==="light"?"Light mode":"High contrast"}">${t==="dark"?"🌙":t==="light"?"☀️":"🔆"}</button>`).join("")}<button class="btn btn-ghost" data-act="logout" style="padding:7px 13px;font-size:13px" title="Sign out of ${H(S.profile.email||"")}">Sign Out</button></div></div>${p?`<div style="display:inline-flex;align-items:center;gap:7px;background:${p.color}18;border:2px solid ${p.color}40;border-radius:9px;padding:5px 14px;font-size:13px;font-weight:700;color:${p.color};margin-bottom:8px">${p.emoji} ${p.name}</div>`:""}<div style="display:flex;gap:4px">${["setup","niche","content","daily","coach"].map(id=>{const done=c.has(id),act=S.tab===id;return`<div style="flex:1;height:5px;border-radius:3px;background:${act?sC[id]:done?"#22c55e":"var(--border)"};transition:all 0.3s"></div>`;}).join("")}</div></div><div class="tab-nav">${TABS.map(t=>{const done=c.has(t.id)&&t.id!=="welcome";const act=S.tab===t.id;const lbl=done&&!act?"✓ "+t.label.replace(/^[^\s]+\s/,""):t.label;return`<button class="tab-btn${act?" active":""}${done&&!act?" done":""}" data-tab="${t.id}" style="${act?"border-bottom:3px solid "+ac+";padding-bottom:7px;":""}">${lbl}</button>`;}).join("")}</div><div class="surface" style="padding:24px 22px 28px;animation:fadeUp 0.25s ease">${S.profile.productId||S.tab==="welcome"||S.tab==="setup"?rTab():`<div class="card" style="border-color:#f9731644;display:flex;gap:12px;align-items:flex-start"><span style="font-size:26px">⚠️</span><div><div style="font-size:16px;font-weight:700;color:#f97316;margin-bottom:6px">Select your product first</div><div class="t-sub" style="font-size:15px;line-height:1.65">Go to <strong>1. My Product</strong> and pick your product — everything else personalises around that choice.</div><button class="btn btn-orange" data-act="go_setup" style="margin-top:12px;padding:10px 20px;font-size:14px">Go to Step 1 →</button></div></div>`}</div></div>`;}
+
+function rTab(){if(S.tab==="welcome")return rWelcome();if(S.tab==="setup")return rSetup();if(S.tab==="niche")return rNiche();if(S.tab==="content")return rContent();if(S.tab==="daily")return rDaily();if(S.tab==="coach")return rCoach();return"";}
+
+function sBanner(icon,color,title,what,how,time,when,tip=""){return`<div class="step-banner" style="background:${color}12;border:1px solid ${color}30"><div style="display:flex;gap:14px;align-items:flex-start"><span style="font-size:28px;flex-shrink:0;line-height:1">${icon}</span><div style="flex:1"><div class="step-title" style="color:${color}">${title}</div><div class="step-body"><strong style="color:var(--text)">What:</strong> ${what}</div><div class="step-body"><strong style="color:var(--text)">How:</strong> ${how}</div><div class="step-meta"><span>⏱ ${time}</span><span>📅 ${when}</span></div>${tip?`<div class="step-tip">💡 <strong>Pro tip:</strong> ${tip}</div>`:""}</div></div></div>`;}
+
+function rBox(id,text,color){if(!text)return"";return`<div class="result-wrap" style="border-color:${color}30"><button class="copy-btn" data-copy="${id}">Copy</button><pre id="${id}">${Hp(text)}</pre></div>`;}
+
+function rWelcome(){
+const name=H(S.profile.name);
+return`
+<div style="text-align:center;padding:8px 0 32px">
+  <div style="font-size:48px;margin-bottom:16px">👋</div>
+  <h2 style="font-size:24px;font-weight:800;letter-spacing:-0.03em;margin-bottom:12px">Welcome, ${name}!</h2>
+  <p class="t-sub" style="font-size:16px;line-height:1.75;max-width:400px;margin:0 auto">Your step-by-step business coach. Know exactly what to do, when, and how — every single day.</p>
+</div>
+
+<div class="card" style="margin-bottom:16px">
+  <div class="label" style="color:#f59e0b;margin-bottom:16px">What this app does</div>
+  ${[["🎯","Builds your niche strategy around YOUR story — not generic advice"],["✨","Generates content using real viral frameworks from top creators"],["📋","Gives you a personalised daily action plan every morning"],["💬","Coaches you through anything — like texting a mentor"],["🧠","Learns your product so every output is specific to you"]].map(([i,t])=>`
+  <div style="display:flex;gap:14px;margin-bottom:14px;align-items:flex-start">
+    <span style="font-size:22px;flex-shrink:0;line-height:1">${i}</span>
+    <span class="t-sub" style="font-size:15px;line-height:1.7;padding-top:1px">${t}</span>
+  </div>`).join("")}
+</div>
+
+<div class="card" style="margin-bottom:16px">
+  <div class="label" style="margin-bottom:20px">Your 5-step journey</div>
+  ${[["🎯","#f97316","Step 1 — Pick Your Product","Once on Day 1","3 min"],["🧠","#8b5cf6","Step 2 — Build Your Niche","Day 1 or 2, revisit monthly","10–15 min"],["✨","#ec4899","Step 3 — Create Content","Every day you post","5–10 min"],["📋","#22c55e","Step 4 — Daily Drop","Every morning","2 min to read"],["💬","#06b6d4","Step 5 — AI Coach","Whenever you're stuck","As needed"]].map(([icon,col,title,when,time],i,arr)=>`
+  <div style="display:flex;gap:14px;margin-bottom:${i<4?20:0}px;position:relative">
+    ${i<4?`<div style="position:absolute;left:18px;top:40px;width:2px;height:20px;background:var(--border)"></div>`:""}
+    <div style="width:38px;height:38px;border-radius:50%;background:${col}18;border:2px solid ${col}50;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">${icon}</div>
+    <div style="padding-top:2px">
+      <div style="color:${col};font-weight:700;font-size:15px;letter-spacing:-0.01em;margin-bottom:3px">${title}</div>
+      <div class="t-muted" style="font-size:13px">⏱ ${time} &nbsp;·&nbsp; ${when}</div>
+    </div>
+  </div>`).join("")}
+</div>
+
+<div class="card" style="margin-bottom:16px;border-color:#22c55e28">
+  <div class="label" style="color:#22c55e;margin-bottom:16px">📅 How to use this daily</div>
+  ${[["☀️ Every morning","Open Daily Drop → read your plan → do the 3 tasks in order"],["✍️ Creating content","Content tab → pick mentor → generate → rewrite in YOUR voice"],["🤔 When stuck","AI Coach → be very specific → get a real answer"],["📆 Once a week","Check your Niche strategy — still on track?"],["🔄 Once a month","Redo the Niche Builder — evolve as you grow"]].map(([t,a])=>`
+  <div style="display:flex;gap:12px;margin-bottom:14px;align-items:flex-start">
+    <span style="font-size:15px;font-weight:700;flex-shrink:0;min-width:130px;padding-top:1px;color:var(--text)">${t}</span>
+    <span class="t-sub" style="font-size:15px;line-height:1.65">${a}</span>
+  </div>`).join("")}
+</div>
+
+<div class="card" style="margin-bottom:28px;border-color:#f9731628">
+  <div class="label" style="color:#f97316;margin-bottom:16px">🔥 3 golden rules</div>
+  ${[["Never name your product","Your content should never mention what you promote by name. Lead with your story and transformation. Curiosity drives clicks."],["Never post AI content word for word","Use it as a starting point only. Rewrite in YOUR voice with YOUR story. That's what converts."],["Consistency beats perfection","One post every day for 30 days beats 10 perfect posts then silence. Show up every single day."]].map(([r,d])=>`
+  <div style="margin-bottom:16px">
+    <div style="color:#f97316;font-weight:700;font-size:15px;margin-bottom:5px">✓ ${r}</div>
+    <div class="t-sub" style="font-size:15px;line-height:1.7">${d}</div>
+  </div>`).join("")}
+</div>
+
+<button class="btn btn-indigo btn-full" data-act="go_setup" style="padding:16px;font-size:17px;font-weight:700">✅ Got it — Start with Step 1 →</button>
+`;}
+function rSetup(){const sel=S.profile.productId;return`${sBanner("🎯","#f97316","Step 1 — Pick Your Product","Tell the app which product you are promoting. Everything personalises around this choice.","Tap your product below, then read the full breakdown so you understand exactly what you are promoting.","3 min","Day 1 — do this once")}<div style="margin-bottom:22px"><label style="display:block;margin-bottom:10px;font-size:15px;font-weight:700">Your name:</label><input value="${H(S.profile.name)}" readonly style="opacity:0.65;cursor:default;font-size:15px"/><p class="t-muted" style="font-size:13px;margin-top:6px">To change your name, sign out and create a new profile.</p></div><label style="display:block;font-size:16px;font-weight:700;margin-bottom:14px">Select your product:</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px">${Object.values(PRODUCTS).map(p=>`<button data-prod="${p.id}" style="background:${sel===p.id?p.color+"18":"var(--card)"};border:2px solid ${sel===p.id?p.color:"var(--border)"};border-radius:14px;padding:20px 16px;text-align:left;cursor:pointer;transition:all 0.2s"><div style="font-size:34px;margin-bottom:9px">${p.emoji}</div><div style="color:${sel===p.id?p.color:"var(--text)"};font-weight:700;font-size:16px;margin-bottom:5px">${p.name}</div><div class="t-muted" style="font-size:13px;line-height:1.5">${p.tagline}</div></button>`).join("")}</div>${sel?`<div style="display:flex;flex-direction:column;gap:14px;animation:fadeIn 0.3s ease"><div class="card" style="border-color:${PRODUCTS[sel].color}44"><div style="color:${PRODUCTS[sel].color};font-weight:700;font-size:13px;letter-spacing:1px;margin-bottom:12px">WHAT IT IS</div><p class="t-sub" style="font-size:15px;line-height:1.85">${PRODUCTS[sel].description}</p></div><div class="card"><div style="color:var(--text);font-weight:700;font-size:13px;letter-spacing:1px;margin-bottom:14px">HOW IT WORKS</div>${PRODUCTS[sel].howItWorks.map((s,i)=>`<div style="display:flex;gap:12px;margin-bottom:11px;align-items:flex-start"><div style="width:26px;height:26px;border-radius:50%;flex-shrink:0;background:${PRODUCTS[sel].color}22;color:${PRODUCTS[sel].color};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">${i+1}</div><div class="t-sub" style="font-size:15px;line-height:1.65">${s}</div></div>`).join("")}</div><div class="card"><div style="color:var(--text);font-weight:700;font-size:13px;letter-spacing:1px;margin-bottom:14px">💰 INCOME STREAMS</div>${PRODUCTS[sel].incomeStreams.map(s=>`<div style="display:flex;gap:10px;margin-bottom:11px;align-items:flex-start"><span style="color:${PRODUCTS[sel].color};font-weight:700;font-size:16px;flex-shrink:0">$</span><span class="t-sub" style="font-size:15px;line-height:1.65">${s}</span></div>`).join("")}</div><div style="display:flex;flex-wrap:wrap;gap:6px">${PRODUCTS[sel].strengths.map(s=>`<span class="pill" style="background:${PRODUCTS[sel].color}18;color:${PRODUCTS[sel].color}">✓ ${s}</span>`).join("")}</div><div class="card" style="border-color:#f59e0b44;display:flex;gap:13px"><span style="font-size:24px">🔥</span><div><div style="color:#f59e0b;font-weight:700;font-size:15px;margin-bottom:6px">YOUR WINNING EDGE</div><div class="t-sub" style="font-size:15px;line-height:1.75">${PRODUCTS[sel].winningEdge}</div></div></div><div class="card" style="display:flex;gap:13px"><span style="font-size:22px">⚠️</span><div class="t-sub" style="font-size:15px;line-height:1.75"><strong style="color:var(--text)">Honest truth: </strong>${PRODUCTS[sel].honest}</div></div><div class="card" style="border-color:#8b5cf644;display:flex;gap:13px;align-items:center"><span style="font-size:26px">🧠</span><div style="flex:1"><div style="color:#8b5cf6;font-weight:700;font-size:15px;margin-bottom:3px">Great! Now go to Step 2 →</div><div class="t-muted" style="font-size:14px">Head to 2. My Niche to build your personalised strategy</div></div><button class="btn btn-purple" data-act="go_niche" style="padding:10px 18px;font-size:14px;flex-shrink:0">Next →</button></div></div>`:""}`;} 
+
+function rNiche(){if(!S.profile.productId)return`<p class="t-sub" style="font-size:15px">Please select your product in Step 1 first.</p>`;if(S.nicheStep==="loading")return`<div style="padding:44px 0;display:flex;flex-direction:column;align-items:center;gap:18px"><div class="spin spin-dark" style="width:46px;height:46px;border-width:4px"></div><div class="t-sub" style="font-size:16px;text-align:center;line-height:1.7">Building your personalised niche strategy...<br><span class="t-muted" style="font-size:14px">This uses your answers to create something truly yours</span></div></div>`;if(S.nicheStep==="result")return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div style="color:#8b5cf6;font-weight:700;font-size:18px">🧠 Your Niche Strategy</div><button class="btn btn-ghost" data-act="niche_reset" style="padding:8px 16px;font-size:14px">Redo</button></div>${rBox("niche-out",S.nicheResult,"#8b5cf6")}<div class="card" style="margin-top:16px;border-color:#ec489944;display:flex;gap:13px;align-items:center"><span style="font-size:26px">✨</span><div style="flex:1"><div style="color:#ec4899;font-weight:700;font-size:15px;margin-bottom:3px">Strategy ready! Now go to Step 3 →</div><div class="t-muted" style="font-size:14px">Head to 3. Content to start creating posts using your mentor's viral frameworks</div></div><button class="btn btn-ghost" data-act="go_content" style="padding:10px 16px;font-size:14px;flex-shrink:0">Next →</button></div>`;const ans=NICHE_QS.filter(q=>(S.nicheAnswers[q.id]||"").trim().length>2).length;const pct=Math.round((ans/NICHE_QS.length)*100);const q=NICHE_QS[S.nicheCurrent];const allDone=ans===NICHE_QS.length;return`${sBanner("🧠","#8b5cf6","Step 2 — Build Your Niche","Answer 6 honest questions about YOU. The app builds a personalised strategy combining what you love with what actually makes money.","Answer all 6 questions as honestly as possible, then tap Build My Strategy and save the result.","10 to 15 min","Day 1 or 2 — revisit monthly","The more specific your answers, the more personalised and useful your strategy will be. Do not rush this step.")}<div style="margin-bottom:20px"><div style="display:flex;justify-content:space-between;margin-bottom:9px"><span class="t-muted" style="font-size:15px">${ans} of ${NICHE_QS.length} answered</span><span style="color:#8b5cf6;font-size:15px;font-weight:700">${pct}%</span></div><div style="background:var(--border);border-radius:5px;height:7px"><div style="background:#8b5cf6;height:7px;border-radius:5px;width:${pct}%;transition:width 0.3s"></div></div></div><div style="display:flex;gap:7px;margin-bottom:20px;flex-wrap:wrap">${NICHE_QS.map((nq,i)=>{const a=(S.nicheAnswers[nq.id]||"").trim().length>2;const act=S.nicheCurrent===i;return`<button data-nq="${i}" style="width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;font-weight:700;font-size:14px;background:${act?"#8b5cf6":a?"#22c55e20":"var(--card)"};color:${act?"#fff":a?"#22c55e":"var(--muted)"};outline:${act?"2px solid #8b5cf6":"2px solid var(--border)"};outline-offset:2px;transition:all 0.15s">${a?"✓":i+1}</button>`;}).join("")}</div><div class="card" style="border-color:#8b5cf640;margin-bottom:16px;animation:slideIn 0.2s ease"><div style="color:#8b5cf6;font-size:13px;font-weight:700;letter-spacing:1px;margin-bottom:10px">QUESTION ${S.nicheCurrent+1} OF ${NICHE_QS.length}</div><div style="font-size:16px;font-weight:700;margin-bottom:7px;line-height:1.5;color:var(--text)">${q.label}</div><div class="t-muted" style="font-size:14px;margin-bottom:14px;font-style:italic">💡 ${q.hint}</div><textarea data-key="nq_${q.id}" rows="4" placeholder="${q.placeholder}" style="resize:vertical;font-size:15px;line-height:1.6">${Hp(S.nicheAnswers[q.id]||"")}</textarea></div><div style="display:flex;gap:10px;margin-bottom:20px">${S.nicheCurrent>0?`<button class="btn btn-ghost" data-act="niche_back" style="padding:12px 20px;font-size:15px">← Back</button>`:""} ${S.nicheCurrent<5?`<button class="btn btn-ghost" data-act="niche_next" style="padding:12px 20px;font-size:15px">Next →</button>`:""}</div>${allDone?`<div style="animation:fadeIn 0.3s ease"><div class="card" style="border-color:#22c55e44;display:flex;gap:11px;align-items:center;margin-bottom:14px"><span style="font-size:22px">✅</span><span style="color:#22c55e;font-size:15px;font-weight:600">All questions answered — ready to build your strategy!</span></div><button class="btn btn-purple" data-act="niche_gen" style="width:100%;padding:15px;font-size:17px">🧠 Build My Personalised Niche Strategy</button></div>`:""}`;}
+
+function rContent(){if(!S.contentMentor)return`${sBanner("✨","#ec4899","Step 3 — Create Your Content","Pick a mentor and generate posts using their actual viral hooks and frameworks, adapted for your voice and product.","Pick a mentor, pick your platform, choose Fresh Posts, Hook Generator, or Remix, generate, then rewrite in your own voice before posting.","5 to 10 min per session","Every day you create content","Never post AI content word for word. Rewrite in your own voice with your own story. That is what makes it convert.")}<div style="font-size:16px;font-weight:700;margin-bottom:14px">✨ Pick a mentor whose style resonates with you:</div><div style="display:flex;flex-direction:column;gap:10px">${Object.values(MENTORS).map(m=>`<button data-cmtr="${m.id}" style="background:var(--card);border:2px solid ${m.color}44;border-radius:14px;padding:15px 18px;text-align:left;display:flex;gap:14px;align-items:center;cursor:pointer;transition:all 0.2s"><div style="width:44px;height:44px;border-radius:11px;background:${m.color}20;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">${m.emoji}</div><div style="flex:1"><div style="color:var(--text);font-weight:700;font-size:15px;margin-bottom:3px">${m.name}</div><div class="t-muted" style="font-size:13px;margin-bottom:2px">${m.handle} · ${m.platforms.join(", ")}</div><div class="t-sub" style="font-size:13px;line-height:1.5">${m.vibe.split(".")[0]}.</div></div><span style="color:${m.color};font-size:18px;flex-shrink:0">→</span></button>`).join("")}</div>`;const m=MENTORS[S.contentMentor];const loading=S.loading.content;return`<div style="background:${m.color}12;border:2px solid ${m.color}33;border-radius:12px;padding:12px 18px;margin-bottom:18px;display:flex;align-items:center;gap:11px"><span style="font-size:22px">${m.emoji}</span><div style="flex:1"><div style="color:${m.color};font-weight:700;font-size:15px">${m.name} Framework</div><div class="t-muted" style="font-size:13px;margin-top:2px">${m.vibe.split(".")[0]}.</div></div><button class="btn btn-ghost" data-act="content_switch" style="padding:7px 14px;font-size:13px">Switch</button></div><label style="display:block;font-size:13px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:10px">PLATFORM</label><div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">${m.platforms.map(pl=>`<button data-plat="${pl}" style="padding:10px 18px;border-radius:22px;border:none;font-size:14px;font-weight:${S.contentPlatform===pl?700:500};background:${S.contentPlatform===pl?m.color:"var(--card)"};color:${S.contentPlatform===pl?"#fff":"var(--sub)"};cursor:pointer;transition:all 0.15s">${pl}</button>`).join("")}</div><label style="display:block;font-size:13px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:10px">CONTENT TYPE</label><div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">${[{id:"fresh",label:"✨ Fresh Posts"},{id:"hook",label:"🎣 Hook Generator"},{id:"remix",label:"🔁 Remix a Post"}].map(md=>`<button data-mode="${md.id}" style="padding:10px 18px;border-radius:22px;border:none;font-size:14px;font-weight:${S.contentMode===md.id?700:500};background:${S.contentMode===md.id?"#f97316":"var(--card)"};color:${S.contentMode===md.id?"#fff":"var(--sub)"};cursor:pointer;transition:all 0.15s">${md.label}</button>`).join("")}</div>${S.contentMode==="remix"?`<label style="display:block;font-size:15px;font-weight:700;margin-bottom:9px">Paste the viral post you want to remix:</label><textarea id="paste-box" data-key="paste" rows="4" placeholder="Paste any viral post from TikTok, Instagram, or Facebook..." style="margin-bottom:16px;resize:vertical;font-size:15px;line-height:1.6">${Hp(S.contentPaste)}</textarea>`:""}<button class="btn btn-orange" data-act="content_gen" ${loading||!S.contentPlatform?"disabled":""} style="width:100%;padding:15px;font-size:16px;margin-bottom:6px">${loading?`<div class="spin spin-dark"></div> Creating...`:S.contentMode==="fresh"?"✨ Generate 3 "+m.name+"-Style Posts":S.contentMode==="hook"?"🎣 Generate 10 Viral Hooks":"🔁 Remix This Post"}</button>${!S.contentPlatform?`<p style="color:#f97316;font-size:14px;margin-top:4px">← Select a platform above first</p>`:""} ${rBox("content-out",S.contentResult,m.color)}`;}
+
+function rDaily(){const loading=S.loading.daily;const today=new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});return`${sBanner("📋","#22c55e","Step 4 — Daily Drop","Your personalised action plan for today — exactly what to do, in order, with no fluff.","Open every morning, read your plan, then do the 3 tasks in order. Do not skip any of them.","2 min to read, 1 to 3 hrs to execute","Every morning before you start working","The Daily Drop only works if you actually do the actions. Reading it and doing nothing is the most common mistake new online earners make.")}<div class="card" style="margin-bottom:18px;display:flex;gap:13px;align-items:center"><span style="font-size:22px">📅</span><div><div style="font-size:16px;font-weight:700">${today}</div><div class="t-muted" style="font-size:14px">Your personalised plan for today</div></div></div><button class="btn btn-green" data-act="daily_gen" ${loading?"disabled":""} style="width:100%;padding:15px;font-size:17px;margin-bottom:18px">${loading?`<div class="spin spin-dark"></div> Building your daily plan...`:"📋 Get Today's Drop"}</button>${rBox("daily-out",S.dailyResult,"#22c55e")}`;}
+
+function rCoach(){if(!S.coachMentor)return`${sBanner("💬","#06b6d4","Step 5 — AI Coach","Chat with an AI coach trained in your chosen mentor's framework. Ask anything about strategy, content, handling objections, or what to do next.","Pick your mentor, type your question, and be very specific for the best answer.","As needed","Whenever you are stuck, confused, or need direction","Be specific. What should I post? gets a generic answer. I have 30 minutes, 52 followers, my audience is mums over 40 — what do I post today? gets a real answer.")}<div style="font-size:16px;font-weight:700;margin-bottom:14px">💬 Who do you want to be coached by today?</div><div style="display:flex;flex-direction:column;gap:10px">${Object.values(MENTORS).map(m=>`<button data-cmch="${m.id}" style="background:var(--card);border:2px solid ${m.color}44;border-radius:14px;padding:15px 18px;text-align:left;display:flex;gap:14px;align-items:center;cursor:pointer;transition:all 0.2s"><div style="width:44px;height:44px;border-radius:11px;background:${m.color}20;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">${m.emoji}</div><div style="flex:1"><div style="color:var(--text);font-weight:700;font-size:15px;margin-bottom:3px">${m.name}</div><div class="t-sub" style="font-size:14px;line-height:1.5">${m.vibe.split(".")[0]}.</div></div><span style="color:${m.color};font-size:18px">→</span></button>`).join("")}</div>`;const m=MENTORS[S.coachMentor];return`<div style="background:${m.color}12;border:2px solid ${m.color}33;border-radius:12px;padding:11px 17px;margin-bottom:16px;display:flex;gap:11px;align-items:center"><span style="font-size:20px">${m.emoji}</span><div style="flex:1;color:${m.color};font-weight:700;font-size:15px">${m.name} — AI Coach</div><button class="btn btn-ghost" data-act="coach_switch" style="padding:6px 13px;font-size:13px">Switch</button></div><div id="chat-msgs" style="height:370px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;margin-bottom:14px;padding:4px 0">${S.coachMessages.length===0?`<div class="card" style="font-size:15px;line-height:1.8;color:var(--sub)">👋 Hey ${H(S.profile.name)}! I am your AI coach, inspired by ${m.name}'s approach and framework. Ask me anything — strategy, what to post, how to handle objections, what to do next. The more specific your question, the better my answer.</div>`:""} ${S.coachMessages.map(msg=>`<div class="${msg.role==="user"?"bubble-me":"bubble-ai"}">${H(msg.content)}</div>`).join("")} ${S.coachLoading?`<div style="align-self:flex-start;display:flex;gap:9px;align-items:center;color:var(--muted);font-size:15px"><div class="spin spin-dark"></div> Thinking...</div>`:""}</div><div style="display:flex;gap:10px"><input id="chat-in" placeholder="Ask your coach anything — be specific..." style="flex:1;font-size:15px"/><button class="btn btn-cyan" data-act="coach_send" ${S.coachLoading?"disabled":""} style="padding:12px 18px;font-size:20px;flex-shrink:0">→</button></div><p class="t-muted" style="font-size:13px;margin-top:6px">Press Enter to send</p>`;}
+
+document.body.className=S.theme;
+render();
+</script>
+</body>
+</html>
